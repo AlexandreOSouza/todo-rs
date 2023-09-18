@@ -2,44 +2,57 @@ use clap::{Args, Parser, Subcommand};
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about)]
-pub struct ResultflixArgs {
+pub struct Commands {
     #[clap(subcommand)]
-    pub entity_type: EntityType,
+    pub command: CommandEntity,
 }
 
 #[derive(Debug, Subcommand)]
-pub enum EntityType {
-    /// User subcommand
-    User(UserCommand),
-
-    /// List aoo TODOs
-    List,
+pub enum CommandEntity {
+    /// Create a new TODO item
+    #[clap(short_flag = 'c')]
+    Create(CreateTodo),
+    /// List all TODOs based on params
+    #[clap(short_flag = 'l')]
+    List(ListTodo),
+    /// Mark an TODO or mark all TODOs
+    #[clap(short_flag = 'm')]
+    Mark(MarkTodo),
+    /// Unmark an TODO or unmark all TODOs
+    #[clap(short_flag = 'u')]
+    Unmark(UnmarkTodo),
+    /// Delete a TODO
+    #[clap(short_flag = 'd')]
+    Delete(DeleteTodo),
 }
 
 #[derive(Debug, Args)]
-pub struct UserCommand {
-    #[clap(subcommand)]
-    pub command: UserSubCommand,
-}
-
-#[derive(Debug, Subcommand)]
-pub enum UserSubCommand {
-    /// create user
-    Create(CreateUser),
-    /// Delete user
-    Delete(DeleteUser),
-}
-
-#[derive(Debug, Args)]
-pub struct CreateUser {
-    /// Name of the user
+pub struct CreateTodo {
     pub name: String,
-    /// Email of the user
-    pub email: String,
 }
 
 #[derive(Debug, Args)]
-pub struct DeleteUser {
-    /// Name of the user
-    pub user: String,
+pub struct ListTodo {
+    #[arg(short = 'm')]
+    pub marks: bool,
+    #[arg(short = 'u')]
+    pub unmarks: bool,
+}
+
+#[derive(Debug, Args)]
+pub struct MarkTodo {
+    #[arg(short = 'n')]
+    pub name: Option<String>,
+}
+
+#[derive(Debug, Args)]
+pub struct UnmarkTodo {
+    #[arg(short = 'n')]
+    pub name: Option<String>,
+}
+
+#[derive(Debug, Args)]
+pub struct DeleteTodo {
+    #[arg(short = 'n')]
+    pub name: Option<String>,
 }
